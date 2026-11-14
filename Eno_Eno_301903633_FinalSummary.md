@@ -4,11 +4,11 @@
 
 ## Case study
 
-My case study is Hospital / Clinic System. I designed the database for synthetic scheduling staff, synthetic clinicians and synthetic database students, with separate tables named patient, clinician, appointment and encounter. It supports these operations: book and manage clinic appointments; record an encounter for an appointment; review appointment and encounter reports; benchmark appointment date filtering on synthetic rows.
+In my case study, I have created a database for a Hospital/Clinic System which includes tables: patient, clinician, appointment and encounter. This system allows the user to book and manage appointments in a clinic. The appointment can have encounters recorded and reports reviewed for appointments and encounters. The appointment date can be filtered in the database to compare with the synthetic rows.
 
 ## Portfolio 1: Database Design and Modelling
 
-I organised the relational design into 4 tables. Primary keys identify records, foreign keys preserve the links, and checks enforce the stated business rules. For booked or confirmed appointments, a clinician may have only one appointment at a given start time; cancelled appointments are excluded by the partial unique rule. The normalisation examples show the sample data at 1NF, 2NF and 3NF. All 13 deliberately invalid inserts were rejected without changing the valid sample rows.
+The database has been split into 4 tables. The primary key ensures each record can be identified, the foreign keys ensure the relationships remain intact. The checks ensure the business rules are adhered to. Only one appointment can be booked for a clinician at a certain start time (if it is booked or confirmed). Cancellations are not included due to the partial unique constraint. Normalisation examples show the sample data has been put into 1NF, 2NF and 3NF. All 13 invalid inserts (on purpose) were denied. This did not affect any of the sample data.
 
 ![Hospital / Clinic System ER diagram](images/Eno_Eno_301903633_ERDiagram.png)
 
@@ -18,15 +18,15 @@ Figure 1. Tables, keys and relationships. PK: primary key; FK: foreign key; UK: 
 
 ## Portfolio 2: Query Processing and Optimisation
 
-I ran three SQL queries against the sample records. The join returned 1 rows and included SYN-P-1001 with SYN-C-2001. For the index comparison, I used 20,000 separate performance rows. The median lookup time changed from 1.042 ms to 0.179 ms. Both phases returned the same records. The measured plan used the new index. These timings apply to this lookup and environment.
+Three queries have been run using SQL. The join query returned 1 row. This included SYN-P-1001 and SYN-C-2001. The index comparison used 20,000 individual rows of performance data. The median lookup time reduced from 1.042ms to 0.179ms. The same records were returned in both stages. The plan produced used the new index. These times are for this lookup and environment.
 
 ## Portfolio 3: Transactions and Concurrency
 
-I used a temporary counter on appointment to test COMMIT, ROLLBACK and READ COMMITTED isolation. The uncommitted update remained hidden from the other session, and ROLLBACK restored the earlier committed value. Without locking, two increments left the counter at 2. With SELECT FOR UPDATE, Session B waited for Session A and the final value was 3. The helper is confined to this exercise; the case's original business fields stay unchanged.
+A temporary counter was added to the appointment table. COMMIT, ROLLBACK and READ COMMITTED were tested. The uncommitted change was not visible to the other session. ROLLBACK reverted back to the previously committed value. Without locking the value increased by 2. Using SELECT FOR UPDATE caused Session B to wait for Session A. The final value was therefore 3. The helper is limited to this exercise only. The original business fields from the case have not changed.
 
 ## Portfolio 4: NoSQL and Advanced Data Models
 
-I used care_events for the case's event documents. MongoDB inserted 2 sample events and returned the expected results for 4 queries. Validation rejected an invalid date type and a duplicate event ID. Embedded snapshots keep related details with an event, while the details field can differ by event type. These are fictional events; PostgreSQL continues to enforce its relational rules.
+The care_events table was used for the events within the case. Two sample events were inserted using MongoDB. The four queries returned the expected results. An invalid date type and duplicate event ID were not allowed due to the validation. The embedded snapshots mean related information is stored with the event. The details field may vary depending on the event type. These are fictional events. PostgreSQL still enforces its relational rules.
 
 ## Repository and evidence
 
@@ -39,15 +39,15 @@ The portfolio folders contain the SQL and JavaScript, explanations, query plans,
 
 ## Portfolio 5: Distributed and Cloud Database Exercise
 
-I proposed three MongoDB replica members across separate failure zones. The discussion covers primary elections, majority acknowledgement, secondary lag and sharding trade-offs for care_events. Replication supports availability, while backups address recovery. PostgreSQL needs its own availability plan. This is the permitted discussion option; no live replica set or failover test was deployed.
+Three members were proposed for the MongoDB replica set. These would be in separate failure zones. Primary elections, majority acknowledgement, secondary lag and trade-offs for sharding were discussed. Replication was used to ensure availability. Backups were used to help with recovery. Availability needs to be planned for PostgreSQL. This was the only option to discuss. There was no live replica set to test failover.
 
 ## Individual reflection
 
-I kept patient, clinician, appointment, encounter in separate tables so their details could be maintained without repeating them in every related record. For booked or confirmed appointments, a clinician may have only one appointment at a given start time; cancelled appointments are excluded by the partial unique rule. The constraint tests check this alongside the required values and record links. One issue illustrated by the two-session exercise is that both sessions can read the same value before either update is committed. Locking the row before reading preserves both increments. The index comparison also shows why I need to check the execution plan as well as the final answer: the same result can require different amounts of database work.
+Separate tables were used for patient, clinician, appointment and encounter so that information could be stored without duplication. Only one appointment can be booked for a clinician at certain start time (if it is booked or confirmed). Cancellations are not included due to the partial unique constraint. The constraints were used to ensure that only one appointment can be booked for a clinician at certain start time, required values and that relationships are maintained. One issue that was highlighted was that both sessions can view the same value. By locking the row before reading the value will increase by both increments. The index comparison shows that I need to check the execution plan. This is because the same results can be achieved with different amounts of work done within the database.
 
 ## AI-use declaration
 
-I used GitHub Copilot and the portfolio generator to help prepare the database model, scripts and explanations. The generator ran the PostgreSQL and MongoDB exercises, checked their outputs and captured the result images.  I remain responsible for checking and explaining the submitted work.
+I used GitHub Copilot and the portfolio generator to help prepare the database model and scripts. The generator ran the PostgreSQL and MongoDB exercises, checked their outputs and captured the result images.  I remain responsible for checking and explaining the submitted work.
 
 ## References
 
